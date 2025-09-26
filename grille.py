@@ -1,15 +1,23 @@
 class Grille:
     def __init__(self, lignes, colonnes):
         self.lignes = lignes
+        self.colonnes = colonnes
         self.nombre_colonnes = colonnes
-        self.matrice = [0 for _ in range(lignes * colonnes)]
+        self.vide = "∿"
+        self.touche = "x"
+        self.matrice = [self.vide for _ in range(lignes * colonnes)]
 
     def afficher(self):
-        for row in self.matrice:
-            print(" ".join("X" if cell else "." for cell in row))
+        for y in range(self.lignes):
+            ligne = []
+            for x in range(self.nombre_colonnes):
+                ligne.append(self.matrice[self._index(x, y)])
+            print(" ".join(ligne))
 
     def _index(self, x, y):
         return y * self.nombre_colonnes + x
 
     def tirer(self, x, y):
-        self.matrice[y][x] = 1
+        idx = self._index(x, y)
+        self.matrice[idx] = self.touche
+        return True
