@@ -20,9 +20,9 @@ def test_bateau_custom():
 
 def test_bateau_positions_horizontal():
     b = Bateau(2, 3, longueur=3)
-    assert b.positions() == [(2, 3), (2, 4), (2, 5)]
+    assert b.positions == [(2, 3), (2, 4), (2, 5)]
 
 
 def test_bateau_positions_vertical():
     b = Bateau(2, 3, longueur=3, vertical=True)
-    assert b.positions() == [(2, 3), (3, 3), (4, 3)]
+    assert b.positions == [(2, 3), (3, 3), (4, 3)]
