@@ -14,3 +14,10 @@ class Bateau:
             else:
                 pos.append((self.ligne, self.colonne + i))
         return pos
+    
+    def coule(self, grille):
+        for y, x in self.positions:
+            idx = y * grille.nombre_colonnes + x
+            if grille.matrice[idx] != grille.touche:
+                return False
+        return True
