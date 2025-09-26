@@ -32,6 +32,6 @@ class Grille:
                 return False  
         for (y, x) in bateau.positions:
             idx = self._index(x, y)
-            self.matrice[idx] = self.bateau
+            self.matrice[idx] = getattr(bateau, "marque", self.bateau)
         return True
 
