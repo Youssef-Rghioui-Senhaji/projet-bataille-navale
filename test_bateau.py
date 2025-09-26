@@ -43,3 +43,17 @@ def test_ajoute_bateau():
     b3 = Bateau(1, 0, longueur=4, vertical=True)
     assert g.ajoute(b3) is False
     assert g.matrice == ["∿", "∿", "∿", "⛵", "⛵", "∿"]
+
+
+def test_coule():
+    g = Grille(2, 3)
+    b = Bateau(1, 0, longueur=2, vertical=False)
+
+    g.ajoute(b)
+    assert b.coule(g) is False
+
+    g.tirer(0, 1)
+    assert b.coule(g) is False
+
+    g.tirer(1, 1)
+    assert b.coule(g) is True
