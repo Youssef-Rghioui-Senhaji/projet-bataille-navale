@@ -10,6 +10,11 @@ def test_init():
     assert len(g.matrice[0]) == 8
 
 
+def test_tirer():
+    g = Grille(3, 4)
+    assert g.matrice[0][0] == 0
+    g.tirer(0, 0)
+    assert g.matrice[0][0] == 1
 
 
 def test_afficher(capsys):
@@ -19,4 +24,3 @@ def test_afficher(capsys):
     captured = capsys.readouterr()
     assert "X" in captured.out
     assert "." in captured.out
-
