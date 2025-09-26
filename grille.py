@@ -19,9 +19,11 @@ class Grille:
                 ligne.append(self.matrice[self._index(x, y)])
             print(" ".join(ligne))
 
-    def tirer(self, x, y):
+    def tirer(self, x, y, touche=None):
+        if touche is None:
+            touche = self.touche
         idx = self._index(x, y)
-        self.matrice[idx] = self.touche
+        self.matrice[idx] = touche
         return True
 
     def ajoute(self, bateau):
