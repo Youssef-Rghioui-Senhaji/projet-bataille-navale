@@ -30,3 +30,22 @@ def placer_bateaux_aleatoirement(grille, bateaux):
             bateau.colonne = x
             bateau.vertical = vertical
             grille.ajoute(bateau)
+
+
+def jeu():
+    grille = Grille(8, 10)
+    bateaux = [PorteAvion(0, 0), Croiseur(0, 0), Torpilleur(0, 0), SousMarin(0, 0)]
+
+    placer_bateaux_aleatoirement(grille, bateaux)
+
+    coups = 0
+    while bateaux:
+        grille.afficher()
+        try:
+            x = int(input("Colonne à tirer (0-9) : "))
+            y = int(input("Ligne à tirer (0-7) : "))
+        except ValueError:
+            print("Veuillez entrer des nombres valides")
+            continue
+
+
