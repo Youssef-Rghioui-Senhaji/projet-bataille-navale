@@ -1,1 +1,17 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environnement virtuel
+venv/
+
+# Outils
+.idea/
+.vscode/
+*.log
+
+# Tests
+.coverage
+.pytest_cache/
 
