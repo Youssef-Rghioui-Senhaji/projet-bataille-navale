@@ -1,5 +1,6 @@
 import pytest
 from bateau import Bateau
+from grille import Grille
 
 
 def test_bateau_defaults():
@@ -26,3 +27,19 @@ def test_bateau_positions_horizontal():
 def test_bateau_positions_vertical():
     b = Bateau(2, 3, longueur=3, vertical=True)
     assert b.positions == [(2, 3), (3, 3), (4, 3)]
+
+
+def test_ajoute_bateau():
+    g = Grille(2, 3)
+
+    b1 = Bateau(1, 0, longueur=2, vertical=False)
+    assert g.ajoute(b1) is True
+    assert g.matrice == ["∿", "∿", "∿", "⛵", "⛵", "∿"]
+
+    b2 = Bateau(1, 0, longueur=2, vertical=True)
+    assert g.ajoute(b2) is False
+    assert g.matrice == ["∿", "∿", "∿", "⛵", "⛵", "∿"]
+
+    b3 = Bateau(1, 0, longueur=4, vertical=True)
+    assert g.ajoute(b3) is False
+    assert g.matrice == ["∿", "∿", "∿", "⛵", "⛵", "∿"]
