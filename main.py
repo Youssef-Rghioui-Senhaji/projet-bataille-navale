@@ -14,13 +14,19 @@ def placer_bateaux_aleatoirement(grille, bateaux):
         for y in range(grille.lignes):
             for x in range(grille.nombre_colonnes):
                 for vertical in [False, True]:
-                    bateau_test = type(bateau)(y, x, vertical)
-                    if not grille.ajoute(bateau_test):
-                        continue
-                    chevauchement = any(
-                        grille.matrice[y_ * grille.nombre_colonnes + x_] != grille.vide
-                        for y_, x_ in bateau_test.positions
-                    )
+                    if vertical:
+                        if y + bateau.longueur > grille.lignes:
+                            continue
+                    else:
+                        if x + bateau.longueur > grille.nombre_colonnes:
+                            continue
+
+                    chevauchement = False
+                    for y_, x_ in bateau.positions:
+                        idx = y_ * grille.nombre_colonnes + x_
+                        if grille.matrice[idx] != grille.vide:
+                            chevauchement = True
+                            break
                     if not chevauchement:
                         positions_possibles.append((y, x, vertical))
 
@@ -30,6 +36,7 @@ def placer_bateaux_aleatoirement(grille, bateaux):
             bateau.colonne = x
             bateau.vertical = vertical
             grille.ajoute(bateau)
+
 
 
 def jeu():
@@ -48,4 +55,26 @@ def jeu():
             print("Veuillez entrer des nombres valides")
             continue
 
+        coups += 1
+        idx = y * grille.nombre_colonnes + x
+        case = grille.matrice[idx]
 
+        if case in [bateau.marque for bateau in bateaux if hasattr(bateau, "marque")]:
+            print("💣 Touché !")
+            grille.tirer(x, y, touche="💣")
+        elif case == "💣" or case == "x":
+            print("Vous avez déjà tiré ici !")
+        else:
+            print("🔹 Eau")
+            grille.tirer(x, y)
+
+        for bateau in bateaux[:]:
+            if bateau.coule(grille):
+                print(f"Bateau coulé ! {type(bateau).__name__} ({bateau.marque})")
+                for y_, x_ in bateau.positions:
+                    grille.tirer(x_, y_, touche=bateau.marque)
+                bateaux.remove(bateau)
+
+    print(f"Félicitations ! Vous avez coulé tous les bateaux en {coups} coups.")
+if __name__ == "__main__":
+    jeu()
