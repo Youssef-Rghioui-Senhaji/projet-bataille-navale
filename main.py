@@ -10,26 +10,27 @@ import random
 def placer_bateaux_aleatoirement(grille, bateaux):
     for bateau in bateaux:
         positions_possibles = []
-
         for y in range(grille.lignes):
             for x in range(grille.nombre_colonnes):
-                for vertical in [False, True]:
+                for vertical in (False, True):
                     if vertical:
                         if y + bateau.longueur > grille.lignes:
                             continue
                     else:
                         if x + bateau.longueur > grille.nombre_colonnes:
                             continue
-
-                    chevauchement = False
-                    for y_, x_ in bateau.positions:
-                        idx = y_ * grille.nombre_colonnes + x_
+                    candidate_positions = [
+                        (y + i, x) if vertical else (y, x + i)
+                        for i in range(bateau.longueur)
+                    ]
+                    occupied = False
+                    for py, px in candidate_positions:
+                        idx = py * grille.nombre_colonnes + px
                         if grille.matrice[idx] != grille.vide:
-                            chevauchement = True
+                            occupied = True
                             break
-                    if not chevauchement:
+                    if not occupied:
                         positions_possibles.append((y, x, vertical))
-
         if positions_possibles:
             y, x, vertical = random.choice(positions_possibles)
             bateau.ligne = y
@@ -37,7 +38,27 @@ def placer_bateaux_aleatoirement(grille, bateaux):
             bateau.vertical = vertical
             grille.ajoute(bateau)
 
-
+def afficher_joueur(grille, bateaux):
+    marque_to_bateau = {getattr(b, "marque", None): b for b in bateaux if hasattr(b, "marque")}
+    for y in range(grille.lignes):
+        row = []
+        for x in range(grille.nombre_colonnes):
+            idx = y * grille.nombre_colonnes + x
+            cell = grille.matrice[idx]
+            if isinstance(cell, Bateau):
+                if cell.coule(grille):
+                    row.append(cell.marque)
+                else:
+                    row.append(grille.vide)
+            elif isinstance(cell, str) and cell in marque_to_bateau:
+                bateau = marque_to_bateau[cell]
+                if bateau.coule(grille):
+                    row.append(cell)
+                else:
+                    row.append(grille.vide)
+            else:
+                row.append(cell)
+        print(" ".join(row))
 
 def jeu():
     grille = Grille(8, 10)
@@ -45,36 +66,78 @@ def jeu():
 
     placer_bateaux_aleatoirement(grille, bateaux)
 
+    print("\n=== DEBUG : positions réelles des bateaux ===")
+    try:
+        grille.afficher_corrige()
+    except Exception:
+        # si afficher_corrige n'existe pas dans ta classe Grille, on imprime la matrice brute
+        for y in range(grille.lignes):
+            row = []
+            for x in range(grille.nombre_colonnes):
+                row.append(grille.matrice[y * grille.nombre_colonnes + x])
+            print(" ".join(row))
+
+    shots = set()
     coups = 0
+
     while bateaux:
-        grille.afficher()
+        print("\n=== Grille joueur ===")
+        afficher_joueur(grille, bateaux)
+
         try:
-            x = int(input("Colonne à tirer (0-9) : "))
-            y = int(input("Ligne à tirer (0-7) : "))
+            x = int(input(f"Colonne à tirer (0-{grille.nombre_colonnes - 1}) : "))
+            y = int(input(f"Ligne à tirer (0-{grille.lignes - 1}) : "))
         except ValueError:
             print("Veuillez entrer des nombres valides")
             continue
 
-        coups += 1
-        idx = y * grille.nombre_colonnes + x
-        case = grille.matrice[idx]
+        if not (0 <= x < grille.nombre_colonnes and 0 <= y < grille.lignes):
+            print("Coordonnées hors de la grille")
+            continue
 
-        if case in [bateau.marque for bateau in bateaux if hasattr(bateau, "marque")]:
+        if (x, y) in shots:
+            idx = y * grille.nombre_colonnes + x
+            # Autoriser à re-tirer si la case est encore un "💣" (bateau pas encore coulé)
+            if grille.matrice[idx] != "💣":
+                print("Vous avez déjà tiré ici !")
+                continue
+
+        idx = y * grille.nombre_colonnes + x
+        cell = grille.matrice[idx]
+
+        marques = [getattr(b, "marque", None) for b in bateaux if hasattr(b, "marque")]
+        is_hit = False
+        if isinstance(cell, Bateau):
+            is_hit = True
+        elif isinstance(cell, str) and cell in marques:
+            is_hit = True
+
+        shots.add((x, y))
+        coups += 1
+
+        if is_hit:
             print("💣 Touché !")
-            grille.tirer(x, y, touche="💣")
-        elif case == "💣" or case == "x":
-            print("Vous avez déjà tiré ici !")
+            try:
+                grille.tirer(x, y, touche="💣")
+            except TypeError:
+                grille.tirer(x, y)
+                grille.matrice[idx] = "💣"
         else:
             print("🔹 Eau")
-            grille.tirer(x, y)
+            try:
+                grille.tirer(x, y)
+            except TypeError:
+                grille.matrice[idx] = "x"
 
         for bateau in bateaux[:]:
             if bateau.coule(grille):
-                print(f"Bateau coulé ! {type(bateau).__name__} ({bateau.marque})")
-                for y_, x_ in bateau.positions:
-                    grille.tirer(x_, y_, touche=bateau.marque)
+                print(f"🔥 Bateau coulé ! {type(bateau).__name__} ({bateau.marque})")
+                for (py, px) in bateau.positions:
+                    pidx = py * grille.nombre_colonnes + px
+                    grille.matrice[pidx] = bateau.marque
                 bateaux.remove(bateau)
 
-    print(f"Félicitations ! Vous avez coulé tous les bateaux en {coups} coups.")
+    print(f"\n🎉 Félicitations ! Vous avez coulé tous les bateaux en {coups} coups.")
+
 if __name__ == "__main__":
     jeu()
