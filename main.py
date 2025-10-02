@@ -118,24 +118,28 @@ def jeu():
 
         if is_hit:
             print("💣 Touché !")
-        # Si la case est déjà '💣', ne pas appeler tirer (on laisse le 💣 en place)
-        if grille.matrice[idx] != "💣":
+        if grille.matrice[idx] == "💣":
+            # Révéler tout le bateau
+            for bateau in bateaux:
+                if (y, x) in bateau.positions:
+                    for (py, px) in bateau.positions:
+                        pidx = py * grille.nombre_colonnes + px
+                        grille.matrice[pidx] = bateau.marque
+                    print(f"🔥 Bateau révélé : {type(bateau).__name__} ({bateau.marque})")
+                    try:
+                        bateaux.remove(bateau)
+                    except ValueError:
+                        pass
+                    break
+            grille.afficher()  # actualiser l'affichage
+        else:
+            # Premier tir → mettre la bombe
             try:
                 grille.tirer(x, y, touche="💣")
             except TypeError:
-                # fallback si ta grille.tirer n'accepte pas 'touche'
                 grille.tirer(x, y)
                 grille.matrice[idx] = "💣"
-        else:
-            # Optionnel : message informatif quand on retape sur un 💣
-            print("💣 Case déjà marquée comme touchée (continuez à viser le bateau pour le couler).")
         
-        else:
-            print("🔹 Eau")
-            try:
-                grille.tirer(x, y)
-            except TypeError:
-                grille.matrice[idx] = "x"
 
         for bateau in bateaux[:]:
             if bateau.coule(grille):
