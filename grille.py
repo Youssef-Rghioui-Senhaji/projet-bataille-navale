@@ -34,4 +34,18 @@ class Grille:
             idx = self._index(x, y)
             self.matrice[idx] = getattr(bateau, "marque", self.bateau)
         return True
+        
+    def afficher_corrige(self):
+        """Affiche la grille en montrant les bateaux directement (debug)."""
+        for l in range(self.lignes):
+            ligne = ""
+            for c in range(self.nombre_colonnes):
+                idx = l * self.nombre_colonnes + c
+                case = self.matrice[idx]
+                # Si la case contient un bateau, on affiche sa marque directement
+                if isinstance(case, str) and case not in [self.vide, "x", "💣"]:
+                    ligne += case
+                else:
+                    ligne += case
+            print(ligne)
 
