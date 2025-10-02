@@ -109,7 +109,8 @@ def jeu():
         is_hit = False
         if isinstance(cell, Bateau):
             is_hit = True
-        elif isinstance(cell, str) and cell in marques:
+        elif isinstance(cell, str) and (cell in marques or cell == "💣"):
+            # on considère qu'un '💣' est une case déjà touchée d'un bateau -> on traite comme hit
             is_hit = True
 
         shots.add((x, y))
@@ -117,11 +118,18 @@ def jeu():
 
         if is_hit:
             print("💣 Touché !")
+        # Si la case est déjà '💣', ne pas appeler tirer (on laisse le 💣 en place)
+        if grille.matrice[idx] != "💣":
             try:
                 grille.tirer(x, y, touche="💣")
             except TypeError:
+                # fallback si ta grille.tirer n'accepte pas 'touche'
                 grille.tirer(x, y)
                 grille.matrice[idx] = "💣"
+        else:
+            # Optionnel : message informatif quand on retape sur un 💣
+            print("💣 Case déjà marquée comme touchée (continuez à viser le bateau pour le couler).")
+        
         else:
             print("🔹 Eau")
             try:
