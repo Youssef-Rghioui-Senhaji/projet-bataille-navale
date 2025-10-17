@@ -46,16 +46,10 @@ def afficher_joueur(grille, bateaux):
             idx = y * grille.nombre_colonnes + x
             cell = grille.matrice[idx]
             if isinstance(cell, Bateau):
-                if cell.coule(grille):
-                    row.append(cell.marque)
-                else:
-                    row.append(grille.vide)
+                row.append(grille.vide)  # Afficher vide pour les bateaux
             elif isinstance(cell, str) and cell in marque_to_bateau:
                 bateau = marque_to_bateau[cell]
-                if bateau.coule(grille):
-                    row.append(cell)
-                else:
-                    row.append(grille.vide)
+                row.append(grille.vide)  # Afficher vide pour les bateaux
             else:
                 row.append(cell)
         print(" ".join(row))
@@ -66,16 +60,8 @@ def jeu():
 
     placer_bateaux_aleatoirement(grille, bateaux)
 
-    print("\n=== DEBUG : positions réelles des bateaux ===")
-    try:
-        grille.afficher_corrige()
-    except Exception:
-        # si afficher_corrige n'existe pas dans ta classe Grille, on imprime la matrice brute
-        for y in range(grille.lignes):
-            row = []
-            for x in range(grille.nombre_colonnes):
-                row.append(grille.matrice[y * grille.nombre_colonnes + x])
-            print(" ".join(row))
+    print("\n=== Grille avec placement des bateaux ===")
+    grille.afficher_corrige()  # Afficher la grille avec les bateaux
 
     shots = set()
     coups = 0
@@ -97,7 +83,6 @@ def jeu():
 
         if (x, y) in shots:
             idx = y * grille.nombre_colonnes + x
-            # Autoriser à re-tirer si la case est encore un "💣" (bateau pas encore coulé)
             if grille.matrice[idx] != "💣":
                 print("Vous avez déjà tiré ici !")
                 continue
@@ -110,7 +95,6 @@ def jeu():
         if isinstance(cell, Bateau):
             is_hit = True
         elif isinstance(cell, str) and (cell in marques or cell == "💣"):
-            # on considère qu'un '💣' est une case déjà touchée d'un bateau -> on traite comme hit
             is_hit = True
 
         shots.add((x, y))
@@ -118,8 +102,6 @@ def jeu():
 
         if is_hit:
             print("💣 Touché !")
-        if grille.matrice[idx] == "💣":
-            # Révéler tout le bateau
             for bateau in bateaux:
                 if (y, x) in bateau.positions:
                     for (py, px) in bateau.positions:
@@ -133,15 +115,10 @@ def jeu():
                     break
             grille.afficher()  # actualiser l'affichage
         else:
-            # Premier tir → mettre la bombe
-            try:
-                grille.tirer(x, y, touche="💣")
-            except TypeError:
-                grille.tirer(x, y)
-                grille.matrice[idx] = "💣"
-        
+            print("🔹 Eau")
+            grille.tirer(x, y)
 
-        for bateau in bateaux[:]:
+        for bateau in bateaux[::]:
             if bateau.coule(grille):
                 print(f"🔥 Bateau coulé ! {type(bateau).__name__} ({bateau.marque})")
                 for (py, px) in bateau.positions:
