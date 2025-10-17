@@ -101,19 +101,23 @@ def jeu():
         coups += 1
 
         if is_hit:
-            print("💣 Touché !")
-            for bateau in bateaux:
-                if (y, x) in bateau.positions:
-                    for (py, px) in bateau.positions:
-                        pidx = py * grille.nombre_colonnes + px
-                        grille.matrice[pidx] = bateau.marque
-                    print(f"🔥 Bateau révélé : {type(bateau).__name__} ({bateau.marque})")
-                    try:
-                        bateaux.remove(bateau)
-                    except ValueError:
-                        pass
-                    break
+            if grille.matrice[idx] == "💣":
+                for bateau in bateaux:
+                    if (y, x) in bateau.positions:
+                        grille.matrice[idx] = bateau.marque
+                        print(f"🔥 Bateau coulé ! {type(bateau).__name__} ({bateau.marque})")
+                        try:
+                            bateaux.remove(bateau)
+                        except ValueError:
+                            pass
+                        break
+            else:
+                # Premier tir sur cette case : marquer le coup par une bombe
+                print("💣 Touché !")
+                grille.matrice[idx] = "💣"
+
             grille.afficher()  # actualiser l'affichage
+
         else:
             print("🔹 Eau")
             grille.tirer(x, y)
