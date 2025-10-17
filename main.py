@@ -112,11 +112,10 @@ def jeu():
                             pass
                         break
             else:
-                # Premier tir sur cette case : marquer le coup par une bombe
                 print("💣 Touché !")
                 grille.matrice[idx] = "💣"
 
-            grille.afficher()  # actualiser l'affichage
+            grille.afficher()  
 
         else:
             print("🔹 Eau")
