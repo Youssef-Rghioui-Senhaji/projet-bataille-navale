@@ -17,11 +17,11 @@ def test_tirer():
 
     res = g.tirer(0, 0)
     assert res is True
-    assert g.matrice[idx0] == g.touche
+    assert g.matrice[idx0] == g.rate
 
     idx2 = 1 * g.nombre_colonnes + 2
     g.tirer(2, 1)
-    assert g.matrice[idx2] == g.touche
+    assert g.matrice[idx2] == g.rate
 
 
 def test_afficher(capsys):
@@ -29,16 +29,15 @@ def test_afficher(capsys):
     g.tirer(0, 0)
     g.afficher()
     captured = capsys.readouterr()
-    assert g.touche in captured.out
+    assert g.rate in captured.out
     assert g.vide in captured.out
-
 
 def test_tirer_personnalise():
     g = Grille(2, 2)
 
-    g.tirer(0, 0)
+    g.tirer(0, 0, touche=g.impact)
     idx = 0 * g.nombre_colonnes + 0
-    assert g.matrice[idx] == g.touche
+    assert g.matrice[idx] == g.impact
 
     g.tirer(1, 1, touche="💥")
     idx2 = 1 * g.nombre_colonnes + 1

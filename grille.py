@@ -22,7 +22,7 @@ class Grille:
 
     def tirer(self, x, y, touche=None):
         if touche is None:
-            touche = self.touche
+            touche = self.rate
         idx = self._index(x, y)
         self.matrice[idx] = touche
         return True
