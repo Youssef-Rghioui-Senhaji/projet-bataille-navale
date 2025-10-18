@@ -18,6 +18,6 @@ class Bateau:
     def coule(self, grille):
         for y, x in self.positions:
             idx = y * grille.nombre_colonnes + x
-            if grille.matrice[idx] != grille.touche:
+            if grille.matrice[idx] != grille.impact:
                 return False
         return True
