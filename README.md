@@ -3,15 +3,6 @@ Ceci est un jeu de bataille navale simple développé en Python, entièrement jo
 
 Ce projet a été réalisé en utilisant une approche orientée objet pour structurer le code de manière claire et modulaire.
 
-Absolument ! Un bon fichier README.md est essentiel. C'est la carte de visite de votre projet.
-
-Voici un modèle complet que vous pouvez copier-coller dans un fichier nommé README.md à la racine de votre projet. Je l'ai rédigé en me basant sur toutes les spécificités de votre code.
-
-🚢 Bataille Navale en Ligne de Commande
-Ceci est un jeu de bataille navale simple développé en Python, entièrement jouable depuis un terminal. Le joueur affronte une flotte de bateaux placés aléatoirement sur une grille et doit les couler en un minimum de coups.
-
-Ce projet a été réalisé en utilisant une approche orientée objet pour structurer le code de manière claire et modulaire.
-
 🎮 Fonctionnalités
 Grille de Jeu Dynamique : Le jeu se déroule sur une grille de 8 lignes par 10 colonnes.
 
