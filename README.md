@@ -56,3 +56,6 @@ Le code est organisé en plusieurs fichiers pour une meilleure lisibilité :
 * `grille.py`: Définit la classe `Grille`, responsable de la gestion du plateau de jeu.
 * `bateau.py`: Contient la classe mère `Bateau`, qui définit les propriétés communes à tous les navires.
 * `porte_avion.py`, `croiseur.py`, etc. : Les classes filles pour chaque type de bateau.
+* `test_grille.py`, `test_bateau.py`, etc. : Les fichiers de tests des classes grille et bateau.
+* `story_bateau`, `story_grille.py`, etc. : Ce projet inclut des scripts Python qui démontrent les fonctionnalités clés du jeu du point de vue de l'utilisateur. Chaque fichier `user_story_*.py` est un scénario exécutable qui simule une action et en montre le résultat.
+
