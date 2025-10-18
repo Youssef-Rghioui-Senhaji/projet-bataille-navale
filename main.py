@@ -6,37 +6,55 @@ from sous_marin import SousMarin
 from bateau import Bateau
 import random
 
+def clear_screen():
+    """Efface le terminal pour une meilleure lisibilité."""
+    os.system('cls' if os.name == 'nt' else 'clear')
 
-def placer_bateaux_aleatoirement(grille, bateaux):
-    for bateau in bateaux:
-        positions_possibles = []
-        for y in range(grille.lignes):
-            for x in range(grille.nombre_colonnes):
-                for vertical in (False, True):
-                    if vertical:
-                        if y + bateau.longueur > grille.lignes:
-                            continue
-                    else:
-                        if x + bateau.longueur > grille.nombre_colonnes:
-                            continue
-                    candidate_positions = [
-                        (y + i, x) if vertical else (y, x + i)
-                        for i in range(bateau.longueur)
-                    ]
-                    occupied = False
-                    for py, px in candidate_positions:
-                        idx = py * grille.nombre_colonnes + px
-                        if grille.matrice[idx] != grille.vide:
-                            occupied = True
-                            break
-                    if not occupied:
-                        positions_possibles.append((y, x, vertical))
-        if positions_possibles:
-            y, x, vertical = random.choice(positions_possibles)
-            bateau.ligne = y
-            bateau.colonne = x
-            bateau.vertical = vertical
-            grille.ajoute(bateau)
+def setup_jeu():
+    """Initialise la grille et place les bateaux de manière aléatoire."""
+    grille = Grille(lignes=8, colonnes=10)
+    
+    # Création de la flotte sans position initiale
+    flotte = [
+        PorteAvion(0, 0),
+        Croiseur(0, 0),
+        Torpilleur(0, 0),
+        SousMarin(0, 0)
+    ]
+    
+    bateaux_places = []
+
+    for bateau in flotte:
+        placement_valide = False
+        while not placement_valide:
+            # Choisir une orientation et une position de départ au hasard
+            bateau.vertical = random.choice([True, False])
+            if bateau.vertical:
+                bateau.ligne = random.randint(0, grille.lignes - bateau.longueur)
+                bateau.colonne = random.randint(0, grille.nombre_colonnes - 1)
+            else:
+                bateau.ligne = random.randint(0, grille.lignes - 1)
+                bateau.colonne = random.randint(0, grille.nombre_colonnes - bateau.longueur)
+
+            # Vérifier si le placement est valide (pas de chevauchement)
+            chevauchement = False
+            for pos in bateau.positions:
+                for autre_bateau in bateaux_places:
+                    if pos in autre_bateau.positions:
+                        chevauchement = True
+                        break
+                if chevauchement:
+                    break
+            
+            if not chevauchement:
+                placement_valide = True
+
+        # Une fois un placement valide trouvé, on l'ajoute à la grille et à notre liste
+        grille.ajoute(bateau)
+        bateaux_places.append(bateau)
+    
+    # Retourne la grille de jeu et la liste des bateaux placés
+    return grille, bateaux_places
 
 def afficher_joueur(grille, bateaux):
     marque_to_bateau = {getattr(b, "marque", None): b for b in bateaux if hasattr(b, "marque")}
@@ -106,11 +124,8 @@ def jeu():
                     if (y, x) in bateau.positions:
                         grille.matrice[idx] = bateau.marque
                         print(f"🔥 Bateau coulé ! {type(bateau).__name__} ({bateau.marque})")
-                        try:
-                            bateaux.remove(bateau)
-                        except ValueError:
-                            pass
-                        break
+                        bateaux.remove(bateau)
+                        
             else:
                 print("💣 Touché !")
                 grille.matrice[idx] = "💣"
@@ -120,14 +135,6 @@ def jeu():
         else:
             print("🔹 Eau")
             grille.tirer(x, y)
-
-        for bateau in bateaux[::]:
-            if bateau.coule(grille):
-                print(f"🔥 Bateau coulé ! {type(bateau).__name__} ({bateau.marque})")
-                for (py, px) in bateau.positions:
-                    pidx = py * grille.nombre_colonnes + px
-                    grille.matrice[pidx] = bateau.marque
-                bateaux.remove(bateau)
 
     print(f"\n🎉 Félicitations ! Vous avez coulé tous les bateaux en {coups} coups.")
 
