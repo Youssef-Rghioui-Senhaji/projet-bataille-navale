@@ -13,7 +13,7 @@ while True:
         print("Veuillez entrer des nombres valides.")
         continue
 
-    if not (0 <= x < grille.colonnes) or not (0 <= y < grille.lignes):
+    if not (0 <= x < grille.nombre_colonnes) or not (0 <= y < grille.lignes):
         print("Coordonnées hors de la grille, réessayez.")
         continue
 
