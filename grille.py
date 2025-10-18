@@ -3,7 +3,7 @@ class Grille:
         self.lignes = lignes
         self.nombre_colonnes = colonnes
         self.vide = "∿"
-        self.touche = "x"
+        self.rate = "x"
         self.impact = "💣"
         self.bateau = "⛵"
         self.matrice = [self.vide for _ in range(lignes * colonnes)]
