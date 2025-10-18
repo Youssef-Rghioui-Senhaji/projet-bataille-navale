@@ -8,7 +8,7 @@ def chevauchent(b1: Bateau, b2: Bateau) -> bool:
 def main():
     b1 = Bateau(2, 3, longueur=3)  
 
-    b2 = Bateau(6, 8, longueur=2)  
+    b2 = Bateau(2, 4, longueur=2)  
 
     if chevauchent(b1, b2):
         print("Les bateaux se chevauchent !")
