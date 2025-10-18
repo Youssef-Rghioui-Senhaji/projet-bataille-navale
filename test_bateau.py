@@ -52,8 +52,8 @@ def test_coule():
     g.ajoute(b)
     assert b.coule(g) is False
 
-    g.tirer(0, 1)
+    g.tirer(0, 1, touche=g.impact)
     assert b.coule(g) is False
 
-    g.tirer(1, 1)
+    g.tirer(1, 1, touche=g.impact)
     assert b.coule(g) is True
