@@ -4,6 +4,7 @@ class Grille:
         self.nombre_colonnes = colonnes
         self.vide = "∿"
         self.touche = "x"
+        self.impact = "💣"
         self.bateau = "⛵"
         self.matrice = [self.vide for _ in range(lignes * colonnes)]
 
@@ -36,7 +37,6 @@ class Grille:
         return True
         
     def afficher_corrige(self):
-        """Affiche la grille en montrant les bateaux directement (debug)."""
         for l in range(self.lignes):
             ligne = ""
             for c in range(self.nombre_colonnes):
