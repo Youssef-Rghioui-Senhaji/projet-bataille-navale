@@ -9,7 +9,7 @@ from sous_marin import SousMarin
 
 
 def setup_jeu():
-    """Initialise la grille et place les bateaux de manière aléatoire."""
+
     grille = Grille(lignes=8, colonnes=10)
     flotte = [PorteAvion(0, 0), Croiseur(0, 0), Torpilleur(0, 0), SousMarin(0, 0)]
     bateaux_places = []
@@ -34,4 +34,14 @@ def setup_jeu():
         bateaux_places.append(bateau)
     
     return grille, bateaux_places
+
+
+grille_solution, flotte = setup_jeu()
+nombre_coups = 0
+bateaux_coules = 0
+player_grid_buttons = []
+
+
+coups_label = ptg.Label("Coups: 0")
+message_log = ptg.Label("En attente de votre premier tir...")
 
