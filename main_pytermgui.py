@@ -92,8 +92,9 @@ def generer_texte_grille(grille):
 def on_submit_shot(btn):
     global nombre_coups, bateaux_coules
     
-    entree = input_field.value
-    input_field.value = "" # Vider le champ
+    entree = input_field.value     
+    
+    input_field.value = ""          
     
     try:
         x_str, y_str = entree.split(',')
